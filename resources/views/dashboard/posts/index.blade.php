@@ -25,8 +25,14 @@
             <td>{{ $post->category->name }}</td>
             <td>
               <a href="/dashboard/posts/{{ $post->slug }}" class="badge bg-info text-decoration-none"><span data-feather="eye"></span> Detail</a>
-              <a href="" class="badge bg-warning text-decoration-none"><span data-feather="edit"></span> Edit</a>
-              <a href="" class="badge bg-danger text-decoration-none"><span data-feather="trash-2"></span> Delete</a>
+              <a href="/dashboard/posts/{{ $post->slug }}/edit" class="badge bg-warning text-decoration-none"><span data-feather="edit"></span> Edit</a>
+              <form action="/dashboard/posts/{{ $post->slug }}" method="POST" class="d-inline" onclick="confirm('Are you sure?')">
+                @method('delete')
+                @csrf
+                <button type="submit"class="badge btn-danger border-0 ">
+                  <span data-feather="trash-2"></span> Delete
+                </button>
+              </form>
             </td>
           </tr>  
         @endforeach
