@@ -14,5 +14,29 @@
         </a>
       </li>
     </ul>
+
+    <h6 class="sidebar-heading d-flex justify-content-beetwen align-items-center px-3 mt-4 mb-1 text-muted">
+      <span>Administrator</span>
+    </h6>
+    @can('admin')
+      <ul class="nav flex-column">
+        <li class="nav-item">
+          <a class="nav-link {{ Request::is('dashboard/categories*') ? 'active' : '' }}" href="/dashboard/categories">
+            <span data-feather="grid"></span>
+            Categories
+          </a>
+        </li>
+      </ul>
+    @elsecan('user')
+      <ul class="nav flex-column">
+        <li class="nav-item">
+          <a style="cursor: not-allowed" class=" text-muted nav-link {{ Request::is('dashboard/categories*') ? 'active' : '' }}" href="#">
+            <span data-feather="grid"></span>
+            Categories
+          </a>
+        </li>
+      </ul>
+    @endcan
+    
   </div>
 </nav>

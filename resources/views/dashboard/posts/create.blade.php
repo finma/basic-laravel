@@ -6,7 +6,7 @@
   </div>
 
   <div class="col-lg-8 pb-5">
-    <form action="/dashboard/posts" method="POST">
+    <form action="/dashboard/posts" method="POST" enctype="multipart/form-data">
       @csrf
       <div class="mb-3">
         <label for="title" class="form-label">Title</label>
@@ -39,11 +39,18 @@
         </select>
       </div>
       <div class="mb-3">
+        <label for="image" class="form-label">Post Image</label>
+        <img class="d-block img-fluid img-preview mb-3 col-md-5">
+        <input class="form-control @error('image') is-invalid @enderror" name="image" type="file" id="image" onchange="readFile()">
+        @error('image')
+          <div class="invalid-feedback">
+            {{ $message }}  
+          </div>   
+        @enderror
+      </div>
+      <div class="mb-3">
         <label for="body" class="form-label ">Body</label>
         @error('body')
-          {{-- <div class="invalid-feedback">
-            {{ $message }}  
-          </div>    --}}
           <p class="text-danger">
             {{ $message }}
           </p>
@@ -59,6 +66,7 @@
   <script>
     const title = document.querySelector('#title');
     const slug = document.querySelector('#slug');
+    
 
     title.addEventListener('change', function() {
       fetch('/dashboard/posts/checkSlug?title=' + title.value)
@@ -68,7 +76,20 @@
 
     document.addEventListener('trix-file-accept', function(e) {
       e.preventDefault();
-    })
+    });
+
+    function readFile() {
+      const image = document.querySelector('#image');
+      const preview = document.querySelector('.img-preview');
+
+      const reader = new FileReader();
+
+      reader.readAsDataURL(image.files[0]);
+
+      reader.onload = function(e) {
+        preview.src = e.target.result;
+      }
+    }
   </script>
 
 @endsection

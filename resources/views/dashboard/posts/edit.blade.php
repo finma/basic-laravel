@@ -6,7 +6,7 @@
   </div>
 
   <div class="col-lg-8 pb-5">
-    <form action="/dashboard/posts/{{ $post->slug }}" method="POST">
+    <form action="/dashboard/posts/{{ $post->slug }}" method="POST" enctype="multipart/form-data">
       @method('put')
       @csrf
       <div class="mb-3">
@@ -40,6 +40,21 @@
         </select>
       </div>
       <div class="mb-3">
+        <label for="image" class="form-label">Post Image</label>
+        <input type="hidden" name="oldImage" value={{ $post->image }}>
+        @if ($post->image)
+          <img src="{{ asset('storage/' . $post->image) }}" class="d-block img-fluid img-preview mb-3 col-md-5">
+        @else
+          <img class="d-block img-fluid img-preview mb-3 col-md-5">
+        @endif
+        <input class="form-control @error('image') is-invalid @enderror" name="image" type="file" id="image" onchange="readFile()">
+        @error('image')
+          <div class="invalid-feedback">
+            {{ $message }}  
+          </div>   
+        @enderror
+      </div>
+      <div class="mb-3">
         <label for="body" class="form-label ">Body</label>
         @error('body')
           <p class="text-danger">
@@ -66,7 +81,20 @@
 
     document.addEventListener('trix-file-accept', function(e) {
       e.preventDefault();
-    })
+    });
+
+    function readFile() {
+      const image = document.querySelector('#image');
+      const preview = document.querySelector('.img-preview');
+
+      const reader = new FileReader();
+
+      reader.readAsDataURL(image.files[0]);
+
+      reader.onload = function(e) {
+        preview.src = e.target.result;
+      }
+    }
   </script>
 
 @endsection
